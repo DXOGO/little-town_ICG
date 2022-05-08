@@ -20,32 +20,28 @@ const helper = {
         // ************************** //
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
         sceneElements.camera = camera;
-        camera.position.set(-300, 200, 300);
+        camera.position.set(-850, 350, 0);
         camera.lookAt(0, 0, 0);
 
 
         // ************************** //
         // Add Orthographic camera
         // ************************** //
-        // const cameraWidth = 4000;
+        // const cameraWidth = 10000;
         // const cameraHeight =(cameraWidth / (width / height));
 
         // const camera = new THREE.OrthographicCamera(
-        //     cameraWidth / -10, // left
-        //     cameraWidth / 10, // right
-        //     cameraHeight / 10, // top
-        //     cameraHeight / -10, // bottom
+        //     cameraWidth / -8, // left
+        //     cameraWidth / 8, // right
+        //     cameraHeight / 8, // top
+        //     cameraHeight / -8, // bottom
         //     0, // near plane
-        //     100 // far plane
+        //     10000 // far plane
         // );
         // sceneElements.camera = camera;
-        // camera.position.set(0, 100, 80);
+        // camera.position.set(-850, 350, 0);
         // camera.lookAt(0, 0, 0);
         // ************************** //
-        // NEW --- Control for the camera
-        // ************************** //
-        sceneElements.control = new THREE.OrbitControls(camera);
-        sceneElements.control.screenSpacePanning = true;
 
         // ************************** //
         // Illumination
@@ -92,6 +88,11 @@ const helper = {
         // **************************************** //
         const htmlElement = document.querySelector("#Tag3DScene");
         htmlElement.appendChild(renderer.domElement);
+
+        // NEW --- Control for the camera
+        // ************************** //
+        sceneElements.control = new THREE.OrbitControls(camera, renderer.domElement);
+        sceneElements.control.screenSpacePanning = true;
     },
 
     render: function render(sceneElements) {
