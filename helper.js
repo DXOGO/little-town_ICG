@@ -8,8 +8,12 @@ const helper = {
         // Create the 3D scene
         // ************************** //
         sceneElements.sceneGraph = new THREE.Scene();
+        
+        // var fogColor = new THREE.Color(0x3db8ff);
+        // sceneElements.sceneGraph.background = fogColor; // Setting fogColor as the background color also
+        // sceneElements.sceneGraph.fog = new THREE.Fog(fogColor, 1900, 2900);
 
-        const axesHelper = new THREE.AxesHelper( 50 );
+        const axesHelper = new THREE.AxesHelper( 500 );
         sceneElements.sceneGraph.add(axesHelper);
 
         const width = window.innerWidth;
@@ -20,27 +24,10 @@ const helper = {
         // ************************** //
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
         sceneElements.camera = camera;
-        camera.position.set(-850, 350, 0);
+        camera.position.set(-1500, 520, 0);
         camera.lookAt(0, 0, 0);
 
 
-        // ************************** //
-        // Add Orthographic camera
-        // ************************** //
-        // const cameraWidth = 10000;
-        // const cameraHeight =(cameraWidth / (width / height));
-
-        // const camera = new THREE.OrthographicCamera(
-        //     cameraWidth / -8, // left
-        //     cameraWidth / 8, // right
-        //     cameraHeight / 8, // top
-        //     cameraHeight / -8, // bottom
-        //     0, // near plane
-        //     10000 // far plane
-        // );
-        // sceneElements.camera = camera;
-        // camera.position.set(-850, 350, 0);
-        // camera.lookAt(0, 0, 0);
         // ************************** //
 
         // ************************** //
@@ -50,23 +37,35 @@ const helper = {
         // ************************** //
         // Add ambient light
         // ************************** //
-        const ambientLight = new THREE.AmbientLight('rgb(255, 255, 255)', 0.5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
         sceneElements.sceneGraph.add(ambientLight);
 
         // ***************************** //
         // Add spotlight (with shadows)
         // ***************************** //
-        const spotLight = new THREE.SpotLight('rgb(255, 255, 255)', 0.8);
-        spotLight.position.set(0, 400, 0);
-        sceneElements.sceneGraph.add(spotLight);
+        const sunLight = new THREE.SpotLight(0xffffff, 1, 0, 1.8);
+        sunLight.position.set(0, 1200, 300);
+        sceneElements.sceneGraph.add(sunLight);
 
-        // Setup shadow properties for the spotlight
-        spotLight.castShadow = true;
-        spotLight.shadow.mapSize.width = 2048;
-        spotLight.shadow.mapSize.height = 2048;
+        // Setup shadow properties for the sunlight
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
 
         // Give a name to the spot light
-        spotLight.name = "light";
+        sunLight.name = "sunlight";
+
+        const moonLight = new THREE.SpotLight(0xffffff, 0.2, 0, 2);
+        moonLight.position.set(0, -1200, -200);
+        sceneElements.sceneGraph.add(moonLight);
+
+        // Setup shadow properties for the moonlight
+        moonLight.castShadow = true;
+        moonLight.shadow.mapSize.width = 1024;
+        moonLight.shadow.mapSize.height = 1024;
+
+        // Give a name to the spot light
+        moonLight.name = "moonlight";
 
 
         // *********************************** //

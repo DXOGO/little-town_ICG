@@ -1,10 +1,7 @@
-"use strict";
-
 // To store the scene graph, and elements usefull to rendering the scene
 const sceneElements = {
     sceneGraph: null,
     camera: null,
-    control: null,  // NEW
     renderer: null,
 };
 
@@ -20,7 +17,7 @@ requestAnimationFrame(computeFrame);
 window.addEventListener('resize', resizeWindow);
 
 //To keep track of the keyboard - WASD
-var keyD = false, keyA = false, keyS = false, keyW = false;
+var keyD = false, keyA = false, keyS = false, keyW = false, keyShift= false;
 document.addEventListener('keydown', onDocumentKeyDown, false);
 document.addEventListener('keyup', onDocumentKeyUp, false);
 
@@ -49,6 +46,9 @@ function onDocumentKeyDown(event) {
         case 87: //w
             keyW = true;
             break;
+        case 16: //shift
+            keyShift = true;
+            break;
     }
 }
 function onDocumentKeyUp(event) {
@@ -65,6 +65,9 @@ function onDocumentKeyUp(event) {
         case 87: //w
             keyW = false;
             break;
+        case 16: //shift
+            keyShift = false;
+            break;
     }
 }
 
@@ -77,51 +80,21 @@ function load3DObjects(sceneGraph) {
     // ************************** //
     // Create a ground plane
     // ************************** //
-    const texture = new THREE.TextureLoader().load( "resources/grass.jpg" );
 
-    texture.wrapS = THREE.RepeatWrapping; 
-    texture.wrapT = THREE.RepeatWrapping;
-    // how many times to repeat in each direction; the default is (1,1),
-    //   which is probably why your example wasn't working
-    texture.repeat.set( 5, 5 ); 
-
-    const planeGeometry = new THREE.PlaneGeometry(1000, 1000);
-    const planeMaterial = new THREE.MeshStandardMaterial({color: 'green', side : THREE.DoubleSide});
-    //const planeMaterial = new THREE.MeshStandardMaterial({map: texture, side : THREE.DoubleSide});
-    const planeObject = new THREE.Mesh(planeGeometry, planeMaterial);
-    sceneGraph.add(planeObject);
-
-    // Change orientation of the plane using rotation
-    planeObject.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-    // Set shadow property
-    planeObject.receiveShadow = true;
+    sceneGraph.add(createPlane(2000,2000));
 
      // ************************** //
-    // Create a road
+    // Create roads
     // ************************** //
-    const road1 = createRoad(1000, 150);
-    sceneGraph.add(road1);
 
-    const road2 = createRoad(150, 500);
-    road2.position.x = 150;
-    road2.position.z = -250;
-    sceneGraph.add(road2);
-
-    const geometry = new THREE.RingGeometry( 100, 225, 60 );
-    const material = new THREE.MeshStandardMaterial( { color: 0x0F0F0F, side: THREE.DoubleSide } );
-    const mesh = new THREE.Mesh( geometry, material );
-    mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-    mesh.position.set(-25,1.3,250);
-    mesh.receiveShadow = true;
-    sceneGraph.add( mesh );
+    sceneGraph.add(createRoad(2000, 150, 0, 0));
+    sceneGraph.add(createRoad(150, 925, 150, -535));
 
     // ************************** //
     // Create a car
     // ************************** //
 
-    const car = createCar();
-    car.position.set(-200,2,0)
-    
+    const car = createCar(-700, 2, 40);
     sceneGraph.add(car);
 
     // Name
@@ -131,61 +104,56 @@ function load3DObjects(sceneGraph) {
     // Create trees
     // ************************** //
 
-    const tree1 = createTree();
-    tree1.position.set(200,0,120)
-    sceneGraph.add(tree1);
+    for (var i = -50; i > -1000; i-=150){
+        sceneGraph.add(createTree(i, -180));
+    }
 
-    //! mudar isto no futuro para uma torre ou isso
-    const tree2 = createTree();
-    tree2.position.set(-80,0,200)
-    sceneGraph.add(tree2);
+    // ************************** //
+    // Create sun and moon
+    // ************************** //
 
-    const tree3 = createTree();
-    tree3.position.set(-150,0,-200)
-    sceneGraph.add(tree3);
-    
-    const tree4 = createTree();
-    tree4.position.set(350,0,-400)
-    sceneGraph.add(tree4);
+    const sun = createSun(0, 1200, 0);
+    sceneGraph.add(sun);
 
-    const tree5 = createTree();
-    tree5.position.set(-400,0,-380)
-    sceneGraph.add(tree5);
-    
+    const sunPivot = new THREE.Object3D();
+    sunPivot.add(sceneElements.sceneGraph.getObjectByName("sunlight"));
+    sunPivot.add(sun);
+    sceneElements.sceneGraph.add(sunPivot)
+    sunPivot.name="sunPivot"
+
+    const moon = createMoon(0, -1200, 0);
+    sceneGraph.add(moon);
+
+    const moonPivot = new THREE.Object3D();
+    sunPivot.add(sceneElements.sceneGraph.getObjectByName("moonlight"));
+    moonPivot.add(moon);
+    sceneElements.sceneGraph.add(moonPivot)
+    moonPivot.name="moonPivot"
+
 }
-// Displacement value
 
-var delta = 2;
-
-var disp = 2.5;
 
 function computeFrame() {
 
-    // THE SPOTLIGHT
+    const lightSun = sceneElements.sceneGraph.getObjectByName("sunPivot");
+    const lightMoon = sceneElements.sceneGraph.getObjectByName("moonPivot");
+    lightSun.rotation.x-=0.012;
+    lightMoon.rotation.x+= 0.012;
 
-    // Can extract an object from the scene Graph from its name
-    // const light = sceneElements.sceneGraph.getObjectByName("light");
-
-    //Apply a small displacement
-
-    // if (light.position.z >= 200) {
-    //     delta *= -1;
-    // } else if (light.position.z <= -200) {
-    //     delta *= -1;
-    // }
-    // light.translateZ(delta);
+    var disp;
 
     // CONTROLING THE CAR WITH THE KEYBOARD
 
     const car = sceneElements.sceneGraph.getObjectByName("car");
-    const wheels = sceneElements.sceneGraph.getObjectByName("wheels");
     
-    if (car.position.x <= 470 && car.position.x >= -470 && car.position.z <= 470  && car.position.z >= -470){
+    if (car.position.x <= 970 && car.position.x >= -970 && car.position.z <= 970  && car.position.z >= -970){
+        // console.log("x", car.position.x)
+        // console.log("z", car.position.z)
+
+        if (keyShift){ disp=7; } else { disp=3.5; }
+
         if (keyW) {
             car.translateX(disp*1.5);
-            // ! fix wheel rotation
-            wheels.translateZ(0.1);
-            console.log(wheels.rotation)
         }
         if (keyA) {
             car.rotation.y += 0.08;
@@ -201,23 +169,23 @@ function computeFrame() {
             car.translateX(disp);
         }
 
+        
+
     } else {
         const currx = car.position.x;
         const currz = car.position.z;
         
-        if (currx >= 470){ car.position.set(-currx+2.5, 0, currz) } 
-        if (currx <= -470) { car.position.set(-currx-2.5, 0, currz)  }
-        if (currz >= 470){ car.position.set(currx, 0, -currz+2.5)  } 
-        if (currz <= -470) { car.position.set(currx, 0, -currz-2.5)  }
+        if (currx >= 970){ car.position.set(-currx+3.51, 0, currz) } 
+        if (currx <= -970) { car.position.set(-currx-3.51, 0, currz)  }
+        if (currz >= 970){ car.position.set(currx, 0, -currz+3.51)  } 
+        if (currz <= -970) { car.position.set(currx, 0, -currz-3.51)  }
     }
    
 
     // Rendering
     helper.render(sceneElements);
 
-    // NEW --- Update control of the camera
-    sceneElements.control.update();
-
     // Call for the next frame
     requestAnimationFrame(computeFrame);
 }
+
