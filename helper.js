@@ -1,5 +1,3 @@
-"use strict";
-
 const helper = {
 
     initEmptyScene: function (sceneElements) {
@@ -37,14 +35,14 @@ const helper = {
         // ************************** //
         // Add ambient light
         // ************************** //
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
         sceneElements.sceneGraph.add(ambientLight);
 
         // ***************************** //
         // Add spotlight (with shadows)
         // ***************************** //
-        const sunLight = new THREE.SpotLight(0xffffff, 1, 0, 1.8);
-        sunLight.position.set(0, 1200, 300);
+        const sunLight = new THREE.SpotLight(0xffffff, 1, 5000, 1.8);
+        sunLight.position.set(0, 1100, 0);
         sceneElements.sceneGraph.add(sunLight);
 
         // Setup shadow properties for the sunlight
@@ -55,14 +53,14 @@ const helper = {
         // Give a name to the spot light
         sunLight.name = "sunlight";
 
-        const moonLight = new THREE.SpotLight(0xffffff, 0.2, 0, 2);
-        moonLight.position.set(0, -1200, -200);
+        const moonLight = new THREE.SpotLight(0xffffff, 0.1, 0, 2);
+        moonLight.position.set(0, -1100, 0);
         sceneElements.sceneGraph.add(moonLight);
 
         // Setup shadow properties for the moonlight
         moonLight.castShadow = true;
-        moonLight.shadow.mapSize.width = 1024;
-        moonLight.shadow.mapSize.height = 1024;
+        moonLight.shadow.mapSize.width = 2048;
+        moonLight.shadow.mapSize.height = 2048;
 
         // Give a name to the spot light
         moonLight.name = "moonlight";

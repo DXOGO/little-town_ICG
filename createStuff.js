@@ -13,6 +13,8 @@ function createPlane(l,w){
   plane.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
   plane.receiveShadow = true;
 
+  plane.name = "name";
+
   return plane;
 }
 
@@ -77,12 +79,31 @@ function createWheels(x,z) {
     frontwindow2.position.y = 21.5;
     
     // lights
-    const light1 = createLight(-9.5);
-    const light2 = createLight(9.5);
+    let bulb1 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
+    bulb1.position.set(30, 15, -9.5);
+  
+    let light1 = new THREE.SpotLight(0xffffff, 3.2, 400, THREE.Math.degToRad(30), 0.4);
+    light1.position.set(30, 15, -9.5);
+    light1.name = "light1";
+    
+    let lightTarget1 = new THREE.Object3D();
+    lightTarget1.position.set(30+0.01, 15, -9.5);
+    light1.target = lightTarget1;
+
+    let bulb2 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
+    bulb2.position.set(30, 15, 9.5);
+  
+    let light2 = new THREE.SpotLight(0xffffff, 3.2, 400, THREE.Math.degToRad(30), 0.4);
+    light2.position.set(30, 15, 9.5);
+    light2.name = "light2";
+  
+    let lightTarget2 = new THREE.Object3D();
+    lightTarget2.position.set(30+0.01, 15, 9.5);
+    light2.target = lightTarget2;
   
     car.add(windowback, frontwindow, frontwindow2, sidewindowsback, sidewindowsfront, sidewindowsfront2,  )
     car.add(backWheel1, backWheel2, frontWheel1, frontWheel2);
-    car.add(light1, light2)
+    car.add(bulb1, bulb2, light1, light2, lightTarget1, lightTarget2)
     car.add(main, cabin);
 
     // Set shadow property
@@ -97,42 +118,21 @@ function createWheels(x,z) {
     return car;
   }
   
-  function createLight(z) {
-  
-    const bulblight = new THREE.Group();
-  
-    let bulb = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
-    bulb.position.set(30, 15, z);
-    bulblight.add(bulb);
-  
-    let light = new THREE.SpotLight(0xffffff, 2.2, 0, THREE.Math.degToRad(30), 0.4);
-    light.position.set(20, 15, z);
-    bulblight.add(light);
-  
-    
-    let lightTarget = new THREE.Object3D();
-    lightTarget.position.set(20+0.01, 15, z);
-    light.target = lightTarget;
-    bulblight.add(lightTarget);
-      
-    return bulblight;
-  }
-  
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TREE
-function createTree(posx, posz) {
+function createTree(posx) {
     //create a group and add the two shapes
     var tree = new THREE.Group();
 
-    var logGeometry = new THREE.CylinderGeometry( 20, 20, 60, 50 );
+    var logGeometry = new THREE.CylinderGeometry( 18, 18, 100, 50 );
     var logMaterial = new THREE.MeshStandardMaterial( {color: 0x964B00,} );
     var log = new THREE.Mesh( logGeometry, logMaterial );
-    log.position.set(50,30,50)
+    log.position.set(50,50,50)
     
-    var leafGeometry = new THREE.ConeGeometry( 28, 70, 50 );
+    var leafGeometry = new THREE.ConeGeometry( 48, 100, 50 );
     var leafMaterial = new THREE.MeshStandardMaterial( {color: 0x008000, wireframe: false} );
     var leaf = new THREE.Mesh( leafGeometry, leafMaterial );
-    leaf.position.set(50,90,50);
+    leaf.position.set(50,150,50);
     
     // RECEIVE AND CAST SHADOW 
     log.receiveShadow = true;
@@ -143,7 +143,7 @@ function createTree(posx, posz) {
     tree.add(log);
     tree.add(leaf);
 
-    tree.position.set(posx, 0, posz);
+    tree.position.set(posx, 0, -200);
 
     return tree
 }  
@@ -192,20 +192,120 @@ function createRoad(l, w, posx, posz) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // BUILDING
-function createBuilding(h, w, posx, posz) {
+function createBuilding(posz) {
 
   const building = new THREE.Group();  
 
+  const main = new THREE.Mesh( new THREE.BoxBufferGeometry(200, 400, 100), new THREE.MeshStandardMaterial({ color: 0x7a5030 }) );
+  const top = new THREE.Mesh( new THREE.BoxBufferGeometry(160, 410, 80), new THREE.MeshStandardMaterial({ color: 0xedd75c }) );
+  const r1 = new THREE.Mesh( new THREE.BoxBufferGeometry(40, 5, 70), new THREE.MeshStandardMaterial({ color: 0xffffff }) );
+  r1.position.set(-101, -110, 0);
+  
+  const door = new THREE.Mesh( new THREE.PlaneGeometry( 35, 70 ), new THREE.MeshStandardMaterial({ color: 0x303030 }) );
+  door.rotateOnAxis(new THREE.Vector3(0, -1, 0), Math.PI / 2);
+  door.position.set(-101, -165, 0);
+      
+  createBuildingWindows(23, 25, 53);
+  createBuildingWindows(-23, -25, -53);
+  
+  function createBuildingWindows(posy, posz, z){
+    const windows = new THREE.Group();  
+
+    for (var x = -60; x < 80; x +=60){
+      for (var y = 150; y > -160; y-=70){
+        const window = new THREE.Mesh( new THREE.PlaneGeometry( 35, 45 ), new THREE.MeshStandardMaterial({ color: 0x82fff0, side: THREE.DoubleSide }) );
+        const r = new THREE.Mesh( new THREE.BoxBufferGeometry(40, 5, 70), new THREE.MeshStandardMaterial({ color: 0x362d20 }) );
+        
+        r.castShadow = true;
+        r.receiveShadow = true;
+        
+        r.position.set(x, y-posy, posz);
+        window.position.set(x, y, z)
+        windows.add(window);
+        windows.add(r);
+
+        building.add(windows)
+      }
+    }
+  }
+
+  createGarbage(100, 0x34eb23);
+  createGarbage(140, 0xfff821);
+  createGarbage(180, 0x339de8);
+
+  function createGarbage(posz, color){
+    const can = new THREE.Group();
+
+    const garbage = new THREE.Mesh( new THREE.BoxBufferGeometry(24, 40, 24), new THREE.MeshStandardMaterial({ color: 0x1c1c1c }) );
+    const gcolor = new THREE.Mesh( new THREE.BoxBufferGeometry(8, 8, 8), new THREE.MeshStandardMaterial({ color: color }) );
+    garbage.position.set(-80,-180, posz);
+    gcolor.position.set(-90, -180, posz);
+    can.add(garbage, gcolor);
+    building.add(can);
+
+    garbage.castShadow = true;
+    garbage.receiveShadow = true;
+  }
+  
+
+  main.castShadow = true;
+  main.receiveShadow = true;
+  top.castShadow = true;
+  top.receiveShadow = true;
+  door.castShadow = true;
+  door.receiveShadow = true;
+  r1.castShadow = true;
+  r1.receiveShadow = true;
+
+  building.add( main );
+  building.add( top );
+  building.add( door );
+  building.add( r1 );
+
+  building.position.set(350, 200, posz)
   return building
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LIGHT POSTS
-function createPost(h, w, posx, posz) {
+function createPost(posx) {
 
-  const post = new THREE.Group();  
+  const lightpost = new THREE.Group();  
 
-  return post
+  var postGeometry = new THREE.CylinderGeometry( 4, 4, 120, 50 );
+  var postMaterial = new THREE.MeshStandardMaterial( {color: 0x242424} );
+  var post = new THREE.Mesh( postGeometry, postMaterial );
+  post.position.set(50,60,50)
+  
+  var holderGeometry = new THREE.CylinderGeometry( 4, 4, 50, 50 );
+  var holderMaterial = new THREE.MeshStandardMaterial( {color: 0x242424} );
+  var holder = new THREE.Mesh( holderGeometry, holderMaterial );
+  holder.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+  holder.position.set(50,120,29);
+  
+  let bulb = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,15), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
+  bulb.position.set(50, 118, 12);
+  
+  let light = new THREE.PointLight(0xffffff, 2, 180);
+  light.position.set(50, 120, -39);
+
+  // RECEIVE AND CAST SHADOW 
+  post.receiveShadow = true;
+  post.castShadow = true;
+  holder.receiveShadow = true;
+  holder.castShadow = true;
+  bulb.castShadow = true;
+  bulb.receiveShadow = true;
+  
+  lightpost.add(post);
+  lightpost.add(holder);
+  lightpost.add(bulb);
+  lightpost.add(light);
+  //lightpost.add(lightTarget);
+
+  lightpost.position.set(posx, 0, 50);
+
+  return lightpost
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
