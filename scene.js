@@ -1,3 +1,10 @@
+// TODO
+/*  add mouse click event listeners 
+    add something on the left (maybe something that just moves on it's own)
+    polish
+    add html text and description of things
+*/
+
 // To store the scene graph, and elements usefull to rendering the scene
 const sceneElements = {
     sceneGraph: null,
@@ -80,7 +87,9 @@ function load3DObjects(sceneGraph) {
     // ************************** //
     // Create a ground plane
     // ************************** //
-    sceneGraph.add(createPlane(2000,2000));
+    const plane = createPlane(2000,2000);
+    sceneGraph.add(plane);
+    plane.name = "plane"
 
      // ************************** //
     // Create roads
@@ -169,17 +178,39 @@ function computeFrame() {
     const light1 = sceneElements.sceneGraph.getObjectByName("light1");
     const light2 = sceneElements.sceneGraph.getObjectByName("light2");
 
+    // get sunlight
     const sunlight = sceneElements.sceneGraph.getObjectByName("sunlight");
 
-    
+    // field lights
+    const fl1 = sceneElements.sceneGraph.getObjectByName("light440")
+    const fl2 = sceneElements.sceneGraph.getObjectByName("light-440")
+
+    let all_lights = []
+    // post lights
+    for (var i = -1000; i < 1000; i+=200){
+        var p = 'postlight'.concat(i);
+        p = sceneElements.sceneGraph.getObjectByName("postlight"+i);
+        all_lights.push(p);
+    }
+
     if (pos.y > 0) {
+
+        // sceneElements.background = 0x66a6ff;
+
+        for (var i in all_lights){ all_lights[i].intensity = 0; }
         light1.intensity = 0;
         light2.intensity = 0;
         sunlight.intensity = 1;
+        fl1.intensity = 0;
+        fl2.intensity = 0;
     } else {
+        // sceneElements.background = 0x0e131a;
+        for (var i in all_lights){ all_lights[i].intensity = 2; }
         sunlight.intensity = 0;
         light1.intensity = 2.2;
         light2.intensity = 2.2;
+        fl1.intensity = 1.6;
+        fl2.intensity = 1.6;
     }
     
     // rotate sun and moon light

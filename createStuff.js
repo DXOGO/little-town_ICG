@@ -261,13 +261,15 @@ function createPost(posx) {
   holder.position.set(50,120,29);
   holder.receiveShadow = true; holder.castShadow = true;
   
-  let bulb = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,15), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
-  bulb.position.set(50, 118, 12);
+  let bulb = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,15), new THREE.MeshBasicMaterial({ color: 0xffffff}) );
+  bulb.position.set(50, 117.5, 12);
   bulb.receiveShadow = true; bulb.castShadow = true;
   
   let light = new THREE.PointLight(0xffffff, 2, 180);
   light.position.set(50, 120, -39);
   
+  light.name = "postlight"+posx
+
   lightpost.add(post, holder, bulb, light);
 
   lightpost.position.set(posx, 0, 50);
@@ -393,10 +395,29 @@ function createField(){
   mesh.receiveShadow = true;
 
 
+  // FIELD LIGHTS
+  function createFieldLight(posx, posy, posz){
+
+    const lightpost = new THREE.Group();  
+
+    const post = new THREE.Mesh( new THREE.CylinderGeometry( 4, 4, 240, 50 ), new THREE.MeshStandardMaterial( {color: 0x242424} ) );
+    post.position.set(-posx, posy,-posz)
+    post.receiveShadow = true; post.castShadow = true;
+    
+    let light = new THREE.SpotLight(0xffffff, 1.6, 900, Math.PI/4, 0.8);
+    light.position.set(-posx, posy*2, -posz);
+    light.target = field;
+
+    light.name = "light"+posx
+    
+    lightpost.add(post, light);
+
+    return lightpost;
+  }
+
   // lightposts
-
-
-
+  field.add(createFieldLight(440, 120, 240))
+  field.add(createFieldLight(-440, 120, -240))
 
   field.add(goal1, goal2);
   field.add(floor, mesh);
