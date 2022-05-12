@@ -22,8 +22,8 @@ const helper = {
         // ************************** //
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
         sceneElements.camera = camera;
-        camera.position.set(-1500, 520, 0);
-        camera.lookAt(0, 0, 0);
+        camera.position.set(-1600, 520, 0);
+        camera.lookAt(0,0,0);
 
 
         // ************************** //
@@ -53,6 +53,9 @@ const helper = {
         // Give a name to the spot light
         sunLight.name = "sunlight";
 
+        // const spotLightHelper = new THREE.SpotLightHelper( sunLight );
+        // sceneElements.sceneGraph.add( spotLightHelper );
+
         const moonLight = new THREE.SpotLight(0xffffff, 0.1, 0, 2);
         moonLight.position.set(0, -1100, 0);
         sceneElements.sceneGraph.add(moonLight);
@@ -64,6 +67,9 @@ const helper = {
 
         // Give a name to the spot light
         moonLight.name = "moonlight";
+
+        // const spotLightHelper2 = new THREE.SpotLightHelper( moonLight );
+        // sceneElements.sceneGraph.add( spotLightHelper2 );
 
 
         // *********************************** //

@@ -96,7 +96,6 @@ function load3DObjects(sceneGraph) {
 
     const car = createCar(-700, 2, 40);
     sceneGraph.add(car);
-
     // Name
     car.name = "car";
 
@@ -108,27 +107,37 @@ function load3DObjects(sceneGraph) {
         sceneGraph.add(createTree(i));
     }
 
-     // ************************** //
-    // Create trees
+    // ************************** //
+    // Create lightposts
     // ************************** //
 
     for (var i = -1000; i < 1000; i+=200){
         sceneGraph.add(createPost(i));
     }
 
-      // ************************** //
-    // Create trees
+    // ************************** //
+    // Create buildings
     // ************************** //
 
-    for (var i= -900; i < 0; i+= 300 ){
-        const b = sceneGraph.add(createBuilding(i));
-
+    for (var z= -900; z < 0; z+= 300 ){
+        sceneGraph.add(createBuilding(z));
     }
-    
+
+    for (var z= 300; z < 900; z+= 300 ){
+        sceneGraph.add(createBuilding(z));
+    }
+
+     // ************************** //
+    // Create football field
+    // ************************** //
+    sceneGraph.add(createField());
+
+
     // ************************** //
     // Create sun and moon
     // ************************** //
 
+    // create sun and add pivot light
     const sun = createSun(0, 1100, 0);
     sceneGraph.add(sun);
 
@@ -138,17 +147,17 @@ function load3DObjects(sceneGraph) {
     sceneElements.sceneGraph.add(sunPivot)
     sunPivot.name="sunPivot"
 
+    // create moon and add pivot light
     const moon = createMoon(0, -1100, 0);
     sceneGraph.add(moon);
 
     const moonPivot = new THREE.Object3D();
-    sunPivot.add(sceneElements.sceneGraph.getObjectByName("moonlight"));
+    moonPivot.add(sceneElements.sceneGraph.getObjectByName("moonlight"));
     moonPivot.add(moon);
     sceneElements.sceneGraph.add(moonPivot)
     moonPivot.name="moonPivot"
 
 }
-
 
 function computeFrame() {
 
@@ -156,21 +165,28 @@ function computeFrame() {
     const worldPosition = new THREE.Vector3();
     const pos = sun.getWorldPosition( worldPosition );
 
+    // turn off car lights when day
     const light1 = sceneElements.sceneGraph.getObjectByName("light1");
     const light2 = sceneElements.sceneGraph.getObjectByName("light2");
 
+    const sunlight = sceneElements.sceneGraph.getObjectByName("sunlight");
+
+    
     if (pos.y > 0) {
         light1.intensity = 0;
         light2.intensity = 0;
+        sunlight.intensity = 1;
     } else {
+        sunlight.intensity = 0;
         light1.intensity = 2.2;
         light2.intensity = 2.2;
     }
-
+    
+    // rotate sun and moon light
     const lightSun = sceneElements.sceneGraph.getObjectByName("sunPivot");
     const lightMoon = sceneElements.sceneGraph.getObjectByName("moonPivot");
-    lightSun.rotation.x -= 0.008;
-    lightMoon.rotation.x -= 0.008;
+    lightSun.rotation.x -= 0.005;
+    lightMoon.rotation.x -= 0.005;
 
     var disp;
 
@@ -178,13 +194,11 @@ function computeFrame() {
 
     const car = sceneElements.sceneGraph.getObjectByName("car");
     
-    if (car.position.x <= 970 && car.position.x >= -970 && car.position.z <= 970  && car.position.z >= -970){
-        // console.log("x", car.position.x)
-        // console.log("z", car.position.z)
+    if (car.position.x < 970 && car.position.x > -970 && car.position.z < 970  && car.position.z > -970){
 
         if (keyShift){ disp=7; } else { disp=3.5; }
 
-        if (keyW) {
+        if (keyW) { 
             car.translateX(disp*1.5);
         }
         if (keyA) {
