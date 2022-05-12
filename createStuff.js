@@ -234,7 +234,13 @@ function createBuilding(posz) {
   door.position.set(-101, -165, 0);
   door.castShadow = true; door.receiveShadow = true;
 
-  building.add( main, top, door, r1 );
+  let light = new THREE.PointLight(0xffffff, 1, 150);
+  light.position.set(-120, -115, 0);
+  light.target = new THREE.Vector3();
+  
+  light.name = "buildinglight"+posz
+
+  building.add( main, top, door, r1, light);
   building.add( createGarbage(100, 0x34eb23), createGarbage(140, 0xfff821), createGarbage(180, 0x339de8) );
   building.add( createBuildingWindows(23, 25, 53), createBuildingWindows(-23, -25, -53) );
 

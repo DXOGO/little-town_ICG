@@ -193,11 +193,25 @@ function computeFrame() {
         all_lights.push(p);
     }
 
+    let building_lights = []
+    // post lights
+    for (var i= -900; i < 0; i+= 300 ){
+        var b = 'buildinglight'.concat(i);
+        b = sceneElements.sceneGraph.getObjectByName("buildinglight"+i);
+        building_lights.push(b);
+    }
+    for (var i= 300; i < 900; i+= 300 ){
+        var b = 'buildinglight'.concat(i);
+        b = sceneElements.sceneGraph.getObjectByName("buildinglight"+i);
+        building_lights.push(b);
+    }
+
     if (pos.y > 0) {
 
         // sceneElements.background = 0x66a6ff;
 
         for (var i in all_lights){ all_lights[i].intensity = 0; }
+        for (var i in building_lights){ building_lights[i].intensity = 0; }
         light1.intensity = 0;
         light2.intensity = 0;
         sunlight.intensity = 1;
@@ -206,6 +220,7 @@ function computeFrame() {
     } else {
         // sceneElements.background = 0x0e131a;
         for (var i in all_lights){ all_lights[i].intensity = 2; }
+        for (var i in building_lights){ building_lights[i].intensity = 1; }
         sunlight.intensity = 0;
         light1.intensity = 2.2;
         light2.intensity = 2.2;
