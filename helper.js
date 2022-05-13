@@ -96,6 +96,9 @@ const helper = {
         // ************************** //
         sceneElements.control = new THREE.OrbitControls(camera, renderer.domElement);
         sceneElements.control.screenSpacePanning = true;
+
+        // new a interaction, then you can add interaction-event with your free style
+        new THREE.Interaction(sceneElements.renderer, sceneElements.sceneGraph, sceneElements.camera);
     },
 
     render: function render(sceneElements) {

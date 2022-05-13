@@ -12,7 +12,7 @@ function createPlane(l,w){
   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
   plane.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
   plane.receiveShadow = true;
-
+  plane.position.set(-200,0,0)
   plane.name = "name";
 
   return plane;
@@ -46,6 +46,7 @@ function createWheels(x,z) {
     const main = new THREE.Mesh( new THREE.BoxBufferGeometry(60, 15, 30), new THREE.MeshStandardMaterial({ color: 'red' }) );
     main.position.y = 12;
     main.castShadow = true; main.receiveShadow = true;
+    main.name = "car_main";
       
     const cabin = new THREE.Mesh( new THREE.BoxBufferGeometry(33, 11, 24), new THREE.MeshStandardMaterial({ color: 0xffffff }) );
     cabin.position.x = -6;
@@ -184,8 +185,8 @@ function createRoad(l, w, posx, posz) {
 function createGarbage(posz, color){
   const can = new THREE.Group();
 
-  const garbage = new THREE.Mesh( new THREE.BoxBufferGeometry(24, 40, 24), new THREE.MeshStandardMaterial({ color: 0x1c1c1c }) );
-  const gcolor = new THREE.Mesh( new THREE.BoxBufferGeometry(8, 8, 8), new THREE.MeshStandardMaterial({ color: color }) );
+  const garbage = new THREE.Mesh( new THREE.BoxBufferGeometry(24, 40, 24), new THREE.MeshStandardMaterial({ color: color }) );
+  const gcolor = new THREE.Mesh( new THREE.BoxBufferGeometry(8, 8, 15), new THREE.MeshStandardMaterial({ color: 0x1c1c1c }) );
   garbage.position.set(-80,-180, posz);
   gcolor.position.set(-90, -170, posz);
   
@@ -432,6 +433,81 @@ function createField(){
   return field;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// LAKE
+function createLake(){
+  const lake = new THREE.Group();
 
+  createRock();
+  createWater();
+  createDuck();
+  
+  // ROCK model from https://github.com/marcaaron/threejs-rock
+  function createRock(){
+      var texture = new THREE.TextureLoader().load( 'resources/rock.jpg' );
+      var loader = new THREE.OBJLoader();
+
+      loader.load(
+        // resource URL
+        'models/rock.obj',
+        // called when resource is loaded
+        function ( object ) {
+          // object.position.set(-450, -30, -600)
+          object.traverse(function (child) {
+
+                  if (child instanceof THREE.Mesh) {
+                      child.material.map = texture;
+                  child.castShadow = true;
+                  }
+
+              });
+
+          lake.add( object);
+        }
+      );
+  }
+
+  // WATER
+  function createWater(){
+    const texture = new THREE.TextureLoader().load( 'resources/water.jpg' );
+    const water = new THREE.Mesh(new THREE.BoxBufferGeometry(600, 600, 20), new THREE.MeshStandardMaterial({map: texture}));
+    water.translateY(10);
+    water.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+    water.receiveShadow = true;
+
+    const floor = new THREE.Mesh(new THREE.BoxBufferGeometry(680, 680, 15), new THREE.MeshStandardMaterial({color: 0xffffff}));
+    floor.translateY(7.5);
+    floor.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+    floor.receiveShadow = true;
+
+    const wall1 = new THREE.Mesh( new THREE.BoxBufferGeometry(600, 30, 10), new THREE.MeshStandardMaterial({ color: 0xffffff }) );
+    wall1.position.set(0, 15, -305);
+    wall1.castShadow = true; wall1.receiveShadow = true;
+
+    const wall2 = new THREE.Mesh( new THREE.BoxBufferGeometry(600, 30, 10), new THREE.MeshStandardMaterial({ color: 0xffffff }) );
+    wall2.position.set(0, 15, 305);
+    wall2.castShadow = true; wall2.receiveShadow = true;
+
+    const wall3 = new THREE.Mesh( new THREE.BoxBufferGeometry(620, 30, 10), new THREE.MeshStandardMaterial({ color: 0xffffff }) );
+    wall3.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+    wall3.position.set(-305, 15, 0);
+    wall3.castShadow = true; wall3.receiveShadow = true;
+
+    const wall4 = new THREE.Mesh( new THREE.BoxBufferGeometry(620, 30, 10), new THREE.MeshStandardMaterial({ color: 0xffffff }) );
+    wall4.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+    wall4.position.set(305, 15, 0);
+    wall4.castShadow = true; wall4.receiveShadow = true;
+
+
+    lake.add( water, wall1, wall2, wall3, wall4, floor );
+  }
+
+  function createDuck(){
+    
+  }
+
+  lake.position.set(-400, 0, -600)
+  return lake;
+}
 
 

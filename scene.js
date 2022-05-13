@@ -1,6 +1,5 @@
 // TODO
-/*  add mouse click event listeners 
-    add something on the left (maybe something that just moves on it's own)
+/*  add something on the left (maybe something that just moves on it's own)
     polish
     add html text and description of things
 */
@@ -12,6 +11,7 @@ const sceneElements = {
     renderer: null,
 };
 
+const car_colors = [0xFF0000, 0xFFFF00, 0x008000, 0x000080, 0xC0C0C0, 0xFFFFFF, 0x3C32A8, 0XFF9021];
 
 helper.initEmptyScene(sceneElements);
 load3DObjects(sceneElements.sceneGraph);
@@ -24,7 +24,7 @@ requestAnimationFrame(computeFrame);
 window.addEventListener('resize', resizeWindow);
 
 //To keep track of the keyboard - WASD
-var keyD = false, keyA = false, keyS = false, keyW = false, keyShift= false;
+var keyD = false, keyA = false, keyS = false, keyW = false, keyShift= false, keyCtrl= false;
 document.addEventListener('keydown', onDocumentKeyDown, false);
 document.addEventListener('keyup', onDocumentKeyUp, false);
 
@@ -56,6 +56,9 @@ function onDocumentKeyDown(event) {
         case 16: //shift
             keyShift = true;
             break;
+        // case 17: //ctrl
+        //     keyCtrl = true;
+        //     break;
     }
 }
 function onDocumentKeyUp(event) {
@@ -75,6 +78,9 @@ function onDocumentKeyUp(event) {
         case 16: //shift
             keyShift = false;
             break;
+        // case 17: //ctrl
+        //     keyCtrl = false;
+        //     break;
     }
 }
 
@@ -87,7 +93,7 @@ function load3DObjects(sceneGraph) {
     // ************************** //
     // Create a ground plane
     // ************************** //
-    const plane = createPlane(2000,2000);
+    const plane = createPlane(1600,2000);
     sceneGraph.add(plane);
     plane.name = "plane"
 
@@ -95,7 +101,7 @@ function load3DObjects(sceneGraph) {
     // Create roads
     // ************************** //
 
-    sceneGraph.add(createRoad(2000, 150, 0, 0));
+    sceneGraph.add(createRoad(1600, 150, -200, 0));
     sceneGraph.add(createRoad(150, 925, 150, -535));
     sceneGraph.add(createRoad(150, 925, 150, 535));
 
@@ -120,7 +126,7 @@ function load3DObjects(sceneGraph) {
     // Create lightposts
     // ************************** //
 
-    for (var i = -1000; i < 1000; i+=200){
+    for (var i = -1000; i < 600; i+=200){
         sceneGraph.add(createPost(i));
     }
 
@@ -136,10 +142,15 @@ function load3DObjects(sceneGraph) {
         sceneGraph.add(createBuilding(z));
     }
 
-     // ************************** //
+    // ************************** //
     // Create football field
     // ************************** //
     sceneGraph.add(createField());
+
+    // ************************** //
+    // Create lake
+    // ************************** //
+    sceneGraph.add(createLake());
 
 
     // ************************** //
@@ -175,8 +186,8 @@ function computeFrame() {
     const pos = sun.getWorldPosition( worldPosition );
 
     // turn off car lights when day
-    const light1 = sceneElements.sceneGraph.getObjectByName("light1");
-    const light2 = sceneElements.sceneGraph.getObjectByName("light2");
+    const bulblight1 = sceneElements.sceneGraph.getObjectByName("light1");
+    const bulblight2 = sceneElements.sceneGraph.getObjectByName("light2");
 
     // get sunlight
     const sunlight = sceneElements.sceneGraph.getObjectByName("sunlight");
@@ -187,7 +198,7 @@ function computeFrame() {
 
     let all_lights = []
     // post lights
-    for (var i = -1000; i < 1000; i+=200){
+    for (var i = -1000; i < 600; i+=200){
         var p = 'postlight'.concat(i);
         p = sceneElements.sceneGraph.getObjectByName("postlight"+i);
         all_lights.push(p);
@@ -212,8 +223,8 @@ function computeFrame() {
 
         for (var i in all_lights){ all_lights[i].intensity = 0; }
         for (var i in building_lights){ building_lights[i].intensity = 0; }
-        light1.intensity = 0;
-        light2.intensity = 0;
+        bulblight1.intensity = 0;
+        bulblight2.intensity = 0;
         sunlight.intensity = 1;
         fl1.intensity = 0;
         fl2.intensity = 0;
@@ -222,12 +233,16 @@ function computeFrame() {
         for (var i in all_lights){ all_lights[i].intensity = 2; }
         for (var i in building_lights){ building_lights[i].intensity = 1; }
         sunlight.intensity = 0;
-        light1.intensity = 2.2;
-        light2.intensity = 2.2;
+        bulblight1.intensity = 2.2;
+        bulblight2.intensity = 2.2;
         fl1.intensity = 1.6;
         fl2.intensity = 1.6;
     }
     
+
+    if (keyCtrl){ bulblight1.intensity = 2.2; bulblight2.intensity = 2.2; 
+    } else {  bulblight1.intensity = 0; bulblight2.intensity = 0; }
+
     // rotate sun and moon light
     const lightSun = sceneElements.sceneGraph.getObjectByName("sunPivot");
     const lightMoon = sceneElements.sceneGraph.getObjectByName("moonPivot");
@@ -237,10 +252,10 @@ function computeFrame() {
     var disp;
 
     // CONTROLING THE CAR WITH THE KEYBOARD
-
     const car = sceneElements.sceneGraph.getObjectByName("car");
+    console.log(car.position.x)
     
-    if (car.position.x < 970 && car.position.x > -970 && car.position.z < 970  && car.position.z > -970){
+    if (car.position.x < 570 && car.position.x > -970 && car.position.z < 970  && car.position.z > -970){
 
         if (keyShift){ disp=7; } else { disp=3.5; }
 
@@ -264,14 +279,21 @@ function computeFrame() {
     } else {
         const currx = car.position.x;
         const currz = car.position.z;
-        
-        if (currx >= 970){ car.position.set(-currx+3.51, 0, currz) } 
-        if (currx <= -970) { car.position.set(-currx-3.51, 0, currz)  }
+
+        if (currx >= 570){ car.position.set((-currx-400)+3.51, 0, currz) } 
+        if (currx <= -970) { car.position.set((-currx-400)-3.51, 0, currz)  }
         if (currz >= 970){ car.position.set(currx, 0, -currz+3.51)  } 
         if (currz <= -970) { car.position.set(currx, 0, -currz-3.51)  }
     }
-   
 
+    var r = car_colors[Math.floor(Math.random()*car_colors.length)];
+
+    car.on('click', function(ev) {});    
+    const car_main = sceneElements.sceneGraph.getObjectByName("car_main");
+    sceneElements.sceneGraph.on('click', ev => {
+        car_main.material.color.setHex(r);
+    })
+    
     // Rendering
     helper.render(sceneElements);
 
