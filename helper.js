@@ -25,7 +25,7 @@ const helper = {
         // ************************** //
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
         sceneElements.camera = camera;
-        camera.position.set(-1600, 520, 0);
+        camera.position.set(-1600, 600, 0);
         camera.lookAt(0,0,0);
 
 
@@ -92,7 +92,7 @@ const helper = {
         // **************************************** //
         // Add the rendered image in the HTML DOM
         // **************************************** //
-        const htmlElement = document.querySelector("#Tag3DScene");
+        const htmlElement = document.querySelector("#little-town");
         htmlElement.appendChild(renderer.domElement);
 
         // NEW --- Control for the camera

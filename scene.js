@@ -1,9 +1,3 @@
-// TODO
-/*  add something on the left (maybe something that just moves on it's own)
-    polish
-    add html text and description of things
-*/
-
 // To store the scene graph, and elements usefull to rendering the scene
 const sceneElements = {
     sceneGraph: null,
@@ -301,25 +295,8 @@ function computeFrame() {
     
     // Rendering
     helper.render(sceneElements);
-    TWEEN.update();
 
     // Call for the next frame
     requestAnimationFrame(computeFrame);
 }
-
-// function createMovement(duck, x, z){
-
-//     var targetPosition = new THREE.Vector3( x, 0, z );
-//     var tween = new TWEEN.Tween( duck.position ).to( targetPosition, 4000 ); 
-
-//     movements.push(tween);
-
-//     if (movements.length >= 2) {
-//         for (let i = 0; i < movements.length - 1; i++){
-//             movements[i].chain(movements[i+1]);
-//         }
-//     }
-
-//     movements[0].start();    
-// }
 
