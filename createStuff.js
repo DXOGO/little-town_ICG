@@ -133,10 +133,16 @@ function createTree(posx) {
     leaf.position.set(50,150,50);
     leaf.receiveShadow = true; leaf.castShadow = true;    
     
-    tree.add(log);
-    tree.add(leaf);
+    for (var i= 180; i <= 210; i+=30){
+      var leaf2 = new THREE.Mesh( leafGeometry, leafMaterial );
+      leaf2.position.set(50,i,50);
+      leaf2.receiveShadow = true; leaf2.castShadow = true;    
+      tree.add(leaf2)
+    }
+    
+    tree.add(log, leaf);
 
-    tree.position.set(posx, 0, -200);
+    tree.position.set(posx, 0, -950);
     return tree
 }  
 
@@ -438,9 +444,9 @@ function createField(){
 function createLake(){
   const lake = new THREE.Group();
 
+  createDuck();
   createRock();
   createWater();
-  createDuck();
   
   // ROCK model from https://github.com/marcaaron/threejs-rock
   function createRock(){
@@ -503,10 +509,50 @@ function createLake(){
   }
 
   function createDuck(){
+    const duck = new THREE.Group();
+
+    const geometrybody = new THREE.BoxBufferGeometry( 24, 12, 14 );
+    const materialbody = new THREE.MeshStandardMaterial( {color: 0xf8fc03} );
+    const body = new THREE.Mesh( geometrybody, materialbody );
+    body.position.set( 0, 26, 200 );
+    body.castShadow = true; body.receiveShadow = true;
+
+    const geometrywings = new THREE.BoxBufferGeometry( 10, 6, 18 );
+    const materialwings = new THREE.MeshStandardMaterial( {color: 0xf8fc03} );
+    const wings = new THREE.Mesh( geometrywings, materialwings );
+    wings.position.set( 4, 28, 200 );
+    wings.castShadow = true; wings.receiveShadow = true;
+
+    const geometryhead = new THREE.BoxBufferGeometry( 10, 8, 8 );
+    const materialhead = new THREE.MeshStandardMaterial( {color: 0xf8fc03} );
+    const head = new THREE.Mesh( geometryhead, materialhead );
+    head.position.set( -6, 36, 200 );
+    head.castShadow = true; head.receiveShadow = true;
+
+
+    const geometrybeak = new THREE.BoxBufferGeometry( 6, 2, 4 );
+    const materialbeak = new THREE.MeshStandardMaterial( {color: 0xfc5a03} );
+    const beak = new THREE.Mesh( geometrybeak, materialbeak );
+    beak.position.set( -14, 34, 200 );
+    beak.castShadow = true; beak.receiveShadow = true;
+
+    const geometryleye = new THREE.SphereGeometry( 2.1, 32, 32 );
+    const materialleye = new THREE.MeshBasicMaterial( { color: 0x000000} );
+    const leye = new THREE.Mesh( geometryleye, materialleye );
+    leye.position.set( -8, 36.5, 197 );
+
+    const geometryreye = new THREE.SphereGeometry( 2.1, 32, 32 );
+    const materialreye = new THREE.MeshBasicMaterial( { color: 0x000000} );
+    const reye = new THREE.Mesh( geometryreye, materialreye );
+    reye.position.set( -8, 36.5, 203 );
     
+    duck.add(body, wings, head, beak, leye, reye)
+    duck.name = "duck";
+
+    lake.add(duck)
   }
 
-  lake.position.set(-400, 0, -600)
+  lake.position.set(-400, 0, -500)
   return lake;
 }
 

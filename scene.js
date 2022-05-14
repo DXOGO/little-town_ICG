@@ -11,7 +11,8 @@ const sceneElements = {
     renderer: null,
 };
 
-const car_colors = [0xFF0000, 0xFFFF00, 0x008000, 0x000080, 0xC0C0C0, 0xFFFFFF, 0x3C32A8, 0XFF9021];
+let car_colors = [0xFF0000, 0xFFFF00, 0x008000, 0x000080, 0xC0C0C0, 0xFFFFFF, 0x3C32A8, 0XFF9021];
+let movements = [];
 
 helper.initEmptyScene(sceneElements);
 load3DObjects(sceneElements.sceneGraph);
@@ -181,6 +182,9 @@ function load3DObjects(sceneGraph) {
 
 function computeFrame() {
 
+    const duck = sceneElements.sceneGraph.getObjectByName("duck");
+    duck.rotation.y-=0.01;
+
     const sun = sceneElements.sceneGraph.getObjectByName("sun");
     const worldPosition = new THREE.Vector3();
     const pos = sun.getWorldPosition( worldPosition );
@@ -196,12 +200,12 @@ function computeFrame() {
     const fl1 = sceneElements.sceneGraph.getObjectByName("light440")
     const fl2 = sceneElements.sceneGraph.getObjectByName("light-440")
 
-    let all_lights = []
+    let post_lights = []
     // post lights
     for (var i = -1000; i < 600; i+=200){
         var p = 'postlight'.concat(i);
         p = sceneElements.sceneGraph.getObjectByName("postlight"+i);
-        all_lights.push(p);
+        post_lights.push(p);
     }
 
     let building_lights = []
@@ -219,9 +223,9 @@ function computeFrame() {
 
     if (pos.y > 0) {
 
-        // sceneElements.background = 0x66a6ff;
-
-        for (var i in all_lights){ all_lights[i].intensity = 0; }
+        sceneElements.sceneGraph.background = new THREE.Color(0x91c3ed)
+        
+        for (var i in post_lights){ post_lights[i].intensity = 0; }
         for (var i in building_lights){ building_lights[i].intensity = 0; }
         bulblight1.intensity = 0;
         bulblight2.intensity = 0;
@@ -229,8 +233,10 @@ function computeFrame() {
         fl1.intensity = 0;
         fl2.intensity = 0;
     } else {
-        // sceneElements.background = 0x0e131a;
-        for (var i in all_lights){ all_lights[i].intensity = 2; }
+        
+        sceneElements.sceneGraph.background = new THREE.Color(0x090f14)
+
+        for (var i in post_lights){ post_lights[i].intensity = 2; }
         for (var i in building_lights){ building_lights[i].intensity = 1; }
         sunlight.intensity = 0;
         bulblight1.intensity = 2.2;
@@ -253,7 +259,6 @@ function computeFrame() {
 
     // CONTROLING THE CAR WITH THE KEYBOARD
     const car = sceneElements.sceneGraph.getObjectByName("car");
-    console.log(car.position.x)
     
     if (car.position.x < 570 && car.position.x > -970 && car.position.z < 970  && car.position.z > -970){
 
@@ -296,8 +301,25 @@ function computeFrame() {
     
     // Rendering
     helper.render(sceneElements);
+    TWEEN.update();
 
     // Call for the next frame
     requestAnimationFrame(computeFrame);
 }
+
+// function createMovement(duck, x, z){
+
+//     var targetPosition = new THREE.Vector3( x, 0, z );
+//     var tween = new TWEEN.Tween( duck.position ).to( targetPosition, 4000 ); 
+
+//     movements.push(tween);
+
+//     if (movements.length >= 2) {
+//         for (let i = 0; i < movements.length - 1; i++){
+//             movements[i].chain(movements[i+1]);
+//         }
+//     }
+
+//     movements[0].start();    
+// }
 

@@ -6,13 +6,16 @@ const helper = {
         // Create the 3D scene
         // ************************** //
         sceneElements.sceneGraph = new THREE.Scene();
-        
+        // const day = new THREE.Color(0x91c3ed)
+        // day.name = "day"
+        // const night = new THREE.Color(0x090f14)
+        // night.name = "night"
         // var fogColor = new THREE.Color(0x3db8ff);
         // sceneElements.sceneGraph.background = fogColor; // Setting fogColor as the background color also
         // sceneElements.sceneGraph.fog = new THREE.Fog(fogColor, 1900, 2900);
 
-        const axesHelper = new THREE.AxesHelper( 500 );
-        sceneElements.sceneGraph.add(axesHelper);
+        // const axesHelper = new THREE.AxesHelper( 500 );
+        // sceneElements.sceneGraph.add(axesHelper);
 
         const width = window.innerWidth;
         const height = window.innerHeight;
