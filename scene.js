@@ -240,7 +240,7 @@ function computeFrame() {
     
     if (car.position.x < 570 && car.position.x > -970 && car.position.z < 970  && car.position.z > -970){
 
-        if (keyShift){ disp=7; } else { disp=3.5; }
+        if (keyShift){ disp=10; } else { disp=5; }
 
         if (keyW) { 
             car.translateX(disp*1.5);
