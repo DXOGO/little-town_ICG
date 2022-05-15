@@ -76,7 +76,7 @@ function onDocumentKeyUp(event) {
 //////////////////////////////////////////////////////////////////
 
 
-// Create and insert in the scene graph the models of the 3D scene
+// Insert in the scene graph the models of the 3D scene
 function load3DObjects(sceneGraph) {
 
     // ************************** //
@@ -107,29 +107,21 @@ function load3DObjects(sceneGraph) {
     // Create trees
     // ************************** //
 
-    for (var i = -100; i > -1000; i-=200){
-        sceneGraph.add(createTree(i));
-    }
+    for (var i = -100; i > -1000; i-=200){ sceneGraph.add(createTree(i)); }
 
     // ************************** //
     // Create lightposts
     // ************************** //
 
-    for (var i = -1000; i < 600; i+=200){
-        sceneGraph.add(createPost(i));
-    }
+    for (var i = -1000; i < 600; i+=200){ sceneGraph.add(createPost(i)); }
 
     // ************************** //
     // Create buildings
     // ************************** //
 
-    for (var z= -900; z < 0; z+= 300 ){
-        sceneGraph.add(createBuilding(z));
-    }
+    for (var z= -900; z < 0; z+= 300 ){ sceneGraph.add(createBuilding(z)); }
 
-    for (var z= 300; z < 900; z+= 300 ){
-        sceneGraph.add(createBuilding(z));
-    }
+    for (var z= 300; z < 900; z+= 300 ){ sceneGraph.add(createBuilding(z)); }
 
     // ************************** //
     // Create football field
@@ -215,6 +207,7 @@ function computeFrame() {
         
         for (var i in post_lights){ post_lights[i].intensity = 0; }
         for (var i in building_lights){ building_lights[i].intensity = 0; }
+
         bulblight1.intensity = 0;
         bulblight2.intensity = 0;
         sunlight.intensity = 1;
@@ -226,6 +219,7 @@ function computeFrame() {
 
         for (var i in post_lights){ post_lights[i].intensity = 2; }
         for (var i in building_lights){ building_lights[i].intensity = 1; }
+        
         sunlight.intensity = 0;
         bulblight1.intensity = 2.2;
         bulblight2.intensity = 2.2;
@@ -269,10 +263,10 @@ function computeFrame() {
         const currx = car.position.x;
         const currz = car.position.z;
 
-        if (currx >= 570){ car.position.set((-currx-400)+3.51, 0, currz) } 
-        if (currx <= -970) { car.position.set((-currx-400)-3.51, 0, currz)  }
-        if (currz >= 970){ car.position.set(currx, 0, -currz+3.51)  } 
-        if (currz <= -970) { car.position.set(currx, 0, -currz-3.51)  }
+        if (currx >= 570){ car.position.set( (-currx-400 ) +3.51, 0, currz ) } 
+        if (currx <= -970) { car.position.set( (-currx-400 ) -3.51, 0, currz )  }
+        if (currz >= 970){ car.position.set( currx, 0, -currz+3.51 )  } 
+        if (currz <= -970) { car.position.set( currx, 0, -currz-3.51 )  }
     }
 
     var r = car_colors[Math.floor(Math.random()*car_colors.length)];

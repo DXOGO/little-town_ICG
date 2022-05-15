@@ -6,17 +6,7 @@ const helper = {
         // Create the 3D scene
         // ************************** //
         sceneElements.sceneGraph = new THREE.Scene();
-        // const day = new THREE.Color(0x91c3ed)
-        // day.name = "day"
-        // const night = new THREE.Color(0x090f14)
-        // night.name = "night"
-        // var fogColor = new THREE.Color(0x3db8ff);
-        // sceneElements.sceneGraph.background = fogColor; // Setting fogColor as the background color also
-        // sceneElements.sceneGraph.fog = new THREE.Fog(fogColor, 1900, 2900);
-
-        // const axesHelper = new THREE.AxesHelper( 500 );
-        // sceneElements.sceneGraph.add(axesHelper);
-
+        
         const width = window.innerWidth;
         const height = window.innerHeight;
 
@@ -27,9 +17,6 @@ const helper = {
         sceneElements.camera = camera;
         camera.position.set(-1600, 600, 0);
         camera.lookAt(0,0,0);
-
-
-        // ************************** //
 
         // ************************** //
         // Illumination
@@ -53,11 +40,7 @@ const helper = {
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
 
-        // Give a name to the spot light
         sunLight.name = "sunlight";
-
-        // const spotLightHelper = new THREE.SpotLightHelper( sunLight );
-        // sceneElements.sceneGraph.add( spotLightHelper );
 
         const moonLight = new THREE.SpotLight(0xffffff, 0.1, 0, 2);
         moonLight.position.set(0, -1100, 0);
@@ -68,12 +51,7 @@ const helper = {
         moonLight.shadow.mapSize.width = 2048;
         moonLight.shadow.mapSize.height = 2048;
 
-        // Give a name to the spot light
         moonLight.name = "moonlight";
-
-        // const spotLightHelper2 = new THREE.SpotLightHelper( moonLight );
-        // sceneElements.sceneGraph.add( spotLightHelper2 );
-
 
         // *********************************** //
         // Create renderer (with shadow map)

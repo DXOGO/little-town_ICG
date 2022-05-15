@@ -1,15 +1,7 @@
 // PLANE
 function createPlane(l,w){
-  // const texture = new THREE.TextureLoader().load( "resources/grass.jpg" );
-  
-  // texture.wrapS = THREE.RepeatWrapping; 
-  // texture.wrapT = THREE.RepeatWrapping;
-  
-  // texture.repeat.set( 5, 5 ); 
-  
-  const planeGeometry = new THREE.PlaneGeometry(l, w);
-  const planeMaterial = new THREE.MeshStandardMaterial({color: 'green', side : THREE.DoubleSide});
-  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+  const plane = new THREE.Mesh(new THREE.PlaneGeometry(l, w), new THREE.MeshStandardMaterial({color: 'green', side : THREE.DoubleSide}));
   plane.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
   plane.receiveShadow = true;
   plane.position.set(-200,0,0)
@@ -19,29 +11,15 @@ function createPlane(l,w){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-// WHEELS
-function createWheels(x,z) {
-    const geometry = new THREE.CylinderGeometry(8, 8, 8, 8);
-    const material = new THREE.MeshStandardMaterial({ color: 0x333333 });
-    const wheel = new THREE.Mesh(geometry, material);
-    wheel.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-    wheel.position.set(x,6,z)
-  
-    wheel.castShadow = true;
-    wheel.receiveShadow = true;
-    
-    return wheel;
-  }
   
   // CAR
   function createCar(posx, posy, posz) {
     const car = new THREE.Group();
     
-    const backWheel1 = createWheels(-20, 12);  
-    const backWheel2 = createWheels(-20, -12);
-    const frontWheel1 = createWheels(20, -12);
-    const frontWheel2 = createWheels(20, 12);
+    createWheels(-20, 12);  
+    createWheels(-20, -12);
+    createWheels(20, -12);
+    createWheels(20, 12);
     
     const main = new THREE.Mesh( new THREE.BoxBufferGeometry(60, 15, 30), new THREE.MeshStandardMaterial({ color: 'red' }) );
     main.position.y = 12;
@@ -53,20 +31,21 @@ function createWheels(x,z) {
     cabin.position.y = 24.5;
     cabin.castShadow = true; cabin.receiveShadow = true;
 
-    const windowback = new THREE.Mesh( new THREE.BoxBufferGeometry(10, 8, 18), new THREE.MeshStandardMaterial({ color: 0x333333 }) );
+    const windowcolor = new THREE.MeshStandardMaterial({ color: 0x333333 });
+
+    const windowback = new THREE.Mesh( new THREE.BoxBufferGeometry(10, 8, 18), windowcolor );
     windowback.position.x = -17.8;
     windowback.position.y = 23;
 
-        
-    const sidewindowsback = new THREE.Mesh( new THREE.BoxBufferGeometry(10, 8, 24.3), new THREE.MeshStandardMaterial({ color: 0x333333 }) );
+    const sidewindowsback = new THREE.Mesh( new THREE.BoxBufferGeometry(10, 8, 24.3), windowcolor );
     sidewindowsback.position.x = -15;
     sidewindowsback.position.y = 23;
           
-    const sidewindowsfront = new THREE.Mesh( new THREE.BoxBufferGeometry(14, 8, 24.3), new THREE.MeshStandardMaterial({ color: 0x333333 }) );
+    const sidewindowsfront = new THREE.Mesh( new THREE.BoxBufferGeometry(14, 8, 24.3), windowcolor );
     sidewindowsfront.position.x = 0;
     sidewindowsfront.position.y = 23;
             
-    const sidewindowsfront2 = new THREE.Mesh( new THREE.CylinderGeometry(5.5, 5.5, 24.3, 3), new THREE.MeshStandardMaterial({ color: 0x333333 }) );
+    const sidewindowsfront2 = new THREE.Mesh( new THREE.CylinderGeometry(5.5, 5.5, 24.3, 3), windowcolor );
     sidewindowsfront2.rotateOnAxis(new THREE.Vector3(-1, 0, 0), Math.PI / 2);
     sidewindowsfront2.position.x = 7;
     sidewindowsfront2.position.y = 21.5;
@@ -76,13 +55,13 @@ function createWheels(x,z) {
     frontwindow.position.x = 10.6;
     frontwindow.position.y = 23;
         
-    const frontwindow2 = new THREE.Mesh( new THREE.CylinderGeometry(6.5, 6.5, 20, 3), new THREE.MeshStandardMaterial({ color: 0x333333 }) );
+    const frontwindow2 = new THREE.Mesh( new THREE.CylinderGeometry(6.5, 6.5, 20, 3), windowcolor );
     frontwindow2.rotateOnAxis(new THREE.Vector3(-1, 0, 0), Math.PI / 2);
     frontwindow2.position.x = 12;
     frontwindow2.position.y = 21.5;
     
     // lights
-    let bulb1 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
+    let bulb1 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshBasicMaterial({ color: 0xffffff}) );
     bulb1.position.set(30, 15, -9.5);
   
     let light1 = new THREE.SpotLight(0xffffff, 3.2, 400, THREE.Math.degToRad(30), 0.4);
@@ -90,11 +69,11 @@ function createWheels(x,z) {
     light1.name = "light1";
     
     let lightTarget1 = new THREE.Object3D();
-    lightTarget1.position.set(30+0.01, 15, -9.5);
+    lightTarget1.position.set(30, 15, -9.5);
     light1.target = lightTarget1;
     light1.castShadow = true;
 
-    let bulb2 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
+    let bulb2 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshBasicMaterial({ color: 0xffffff}) );
     bulb2.position.set(30, 15, 9.5);
   
     let light2 = new THREE.SpotLight(0xffffff, 3.2, 400, THREE.Math.degToRad(30), 0.4);
@@ -102,14 +81,25 @@ function createWheels(x,z) {
     light2.name = "light2";
   
     let lightTarget2 = new THREE.Object3D();
-    lightTarget2.position.set(30+0.01, 15, 9.5);
+    lightTarget2.position.set(30, 15, 9.5);
     light2.target = lightTarget2;
     light2.castShadow = true;
   
     car.add(windowback, frontwindow, frontwindow2, sidewindowsback, sidewindowsfront, sidewindowsfront2,  )
-    car.add(backWheel1, backWheel2, frontWheel1, frontWheel2);
     car.add(bulb1, bulb2, light1, light2, lightTarget1, lightTarget2)
     car.add(main, cabin);
+
+    // WHEELS
+    function createWheels(x,z) {
+
+      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 8, 8), new THREE.MeshStandardMaterial({ color: 0x333333 }));
+      wheel.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+      wheel.position.set( x, 6, z )
+
+      wheel.castShadow = true; wheel.receiveShadow = true;
+      
+      car.add(wheel)
+    }
 
     car.position.set(posx, posy, posz);
     return car;
@@ -121,26 +111,18 @@ function createTree(posx) {
     //create a group and add the two shapes
     var tree = new THREE.Group();
 
-    var logGeometry = new THREE.CylinderGeometry( 18, 18, 100, 50 );
-    var logMaterial = new THREE.MeshStandardMaterial( {color: 0x964B00,} );
-    var log = new THREE.Mesh( logGeometry, logMaterial );
-    log.position.set(50,50,50)
+    var log = new THREE.Mesh( new THREE.CylinderGeometry( 18, 18, 100, 50 ), new THREE.MeshStandardMaterial( {color: 0x964B00} ) );
+    log.position.set( 50, 50, 50 )
     log.receiveShadow = true; log.castShadow = true;
     
-    var leafGeometry = new THREE.ConeGeometry( 48, 100, 50 );
-    var leafMaterial = new THREE.MeshStandardMaterial( {color: 0x008000, wireframe: false} );
-    var leaf = new THREE.Mesh( leafGeometry, leafMaterial );
-    leaf.position.set(50,150,50);
-    leaf.receiveShadow = true; leaf.castShadow = true;    
+    tree.add(log);
     
-    for (var i= 180; i <= 210; i+=30){
-      var leaf2 = new THREE.Mesh( leafGeometry, leafMaterial );
-      leaf2.position.set(50,i,50);
-      leaf2.receiveShadow = true; leaf2.castShadow = true;    
-      tree.add(leaf2)
+    for (var i= 150; i <= 210; i+=30){
+      var leaf = new THREE.Mesh( new THREE.ConeGeometry( 48, 100, 50 ),  new THREE.MeshStandardMaterial( {color: 0x008000} ) );
+      leaf.position.set(50,i,50);
+      leaf.receiveShadow = true; leaf.castShadow = true;    
+      tree.add(leaf)
     }
-    
-    tree.add(log, leaf);
 
     tree.position.set(posx, 0, -950);
     return tree
@@ -156,7 +138,7 @@ function createRoad(l, w, posx, posz) {
   const roadMaterial1 = new THREE.MeshStandardMaterial({ color: 0x0F0F0F, side: THREE.DoubleSide });
   road = new THREE.Mesh(roadGeometry1, roadMaterial1);
   road.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-  road.position.set(posx, 0.5, posz);
+  road.position.set(posx, 1, posz);
   road.receiveShadow = true;
   
   const geometry = new THREE.PlaneGeometry( l/40, w/20 );
@@ -166,7 +148,7 @@ function createRoad(l, w, posx, posz) {
     for (var i=posx+50; i < l+posx; i+=100){
       white_line = new THREE.Mesh( geometry, material );
       white_line.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-      white_line.position.set(-l/2+i, 1, posz)
+      white_line.position.set(-l/2+i, 1.5, posz)
       white_line.receiveShadow = true;
       fullroad.add(white_line);
     }
@@ -176,7 +158,7 @@ function createRoad(l, w, posx, posz) {
     for (var i=posz+50; i < w+posz; i+=100){
       white_line = new THREE.Mesh( geometry, material );
       white_line.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-      white_line.position.set(posx, 1, -w/2+i)
+      white_line.position.set(posx, 1.5, -w/2+i)
       white_line.receiveShadow = true;
       fullroad.add(white_line);
     }
@@ -229,7 +211,7 @@ function createBuilding(posz) {
   const main = new THREE.Mesh( new THREE.BoxBufferGeometry(200, 400, 100), new THREE.MeshStandardMaterial({ color: 0x7a5030 }) );
   main.castShadow = true; main.receiveShadow = true;
   
-  const top = new THREE.Mesh( new THREE.BoxBufferGeometry(160, 410, 80), new THREE.MeshStandardMaterial({ color: 0xedd75c }) );
+  const top = new THREE.Mesh( new THREE.BoxBufferGeometry(160, 420, 80), new THREE.MeshStandardMaterial({ color: 0xedd75c }) );
   top.castShadow = true; top.receiveShadow = true;
   
   const r1 = new THREE.Mesh( new THREE.BoxBufferGeometry(40, 5, 70), new THREE.MeshStandardMaterial({ color: 0xffffff }) );
@@ -238,7 +220,7 @@ function createBuilding(posz) {
   
   const door = new THREE.Mesh( new THREE.PlaneGeometry( 35, 70 ), new THREE.MeshStandardMaterial({ color: 0x303030 }) );
   door.rotateOnAxis(new THREE.Vector3(0, -1, 0), Math.PI / 2);
-  door.position.set(-101, -165, 0);
+  door.position.set(-102, -165, 0);
   door.castShadow = true; door.receiveShadow = true;
 
   let light = new THREE.PointLight(0xffffff, 1, 150);
@@ -249,7 +231,7 @@ function createBuilding(posz) {
 
   building.add( main, top, door, r1, light);
   building.add( createGarbage(100, 0x34eb23), createGarbage(140, 0xfff821), createGarbage(180, 0x339de8) );
-  building.add( createBuildingWindows(23, 25, 53), createBuildingWindows(-23, -25, -53) );
+  building.add( createBuildingWindows(23, 25, 55), createBuildingWindows(-23, -25, -55) );
 
   building.position.set(350, 200, posz)
   return building
@@ -258,18 +240,13 @@ function createBuilding(posz) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LIGHT POSTS
 function createPost(posx) {
-
   const lightpost = new THREE.Group();  
 
-  const postGeometry = new THREE.CylinderGeometry( 4, 4, 120, 50 );
-  const postMaterial = new THREE.MeshStandardMaterial( {color: 0x242424} );
-  const post = new THREE.Mesh( postGeometry, postMaterial );
+  const post = new THREE.Mesh( new THREE.CylinderGeometry( 4, 4, 120, 50 ), new THREE.MeshStandardMaterial( {color: 0x242424} ) );
   post.position.set(50,60,50)
   post.receiveShadow = true; post.castShadow = true;
   
-  const holderGeometry = new THREE.CylinderGeometry( 4, 4, 50, 50 );
-  const holderMaterial = new THREE.MeshStandardMaterial( {color: 0x242424} );
-  const holder = new THREE.Mesh( holderGeometry, holderMaterial );
+  const holder = new THREE.Mesh( new THREE.CylinderGeometry( 4, 4, 50, 50 ), new THREE.MeshStandardMaterial( {color: 0x242424} ) );
   holder.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
   holder.position.set(50,120,29);
   holder.receiveShadow = true; holder.castShadow = true;
@@ -286,7 +263,6 @@ function createPost(posx) {
   lightpost.add(post, holder, bulb, light);
 
   lightpost.position.set(posx, 0, 50);
-
   return lightpost
 }
 
@@ -414,23 +390,30 @@ function createField(){
     const lightpost = new THREE.Group();  
 
     const post = new THREE.Mesh( new THREE.CylinderGeometry( 4, 4, 240, 50 ), new THREE.MeshStandardMaterial( {color: 0x242424} ) );
-    post.position.set(-posx, posy,-posz)
+    post.position.set(posx, posy, posz)
     post.receiveShadow = true; post.castShadow = true;
     
-    let light = new THREE.SpotLight(0xffffff, 1.6, 900, Math.PI/4, 0.8);
-    light.position.set(-posx, posy*2, -posz);
+    let light = new THREE.SpotLight(0xffffff, 1.6, 1400, Math.PI/4, 0.8);
+    light.position.set(posx, posy*2, posz);
     light.target = field;
 
     light.name = "light"+posx
     
-    lightpost.add(post, light);
+    let bulb = new THREE.Mesh(new THREE.SphereGeometry(10,10,30), new THREE.MeshStandardMaterial({ color: 0xffffff}) );
+    bulb.position.set(posx, posy*2, posz);
+    bulb.receiveShadow = true; bulb.castShadow = true;
+     
+    let light2 = new THREE.PointLight(0xffffff, 1, 300);
+    light2.position.set(posx, posy*2+100, posz);
+    
+    field.add(post, light, bulb, light2);
 
     return lightpost;
   }
 
   // lightposts
-  field.add(createFieldLight(440, 120, 240))
-  field.add(createFieldLight(-440, 120, -240))
+  createFieldLight(440, 120, 240)
+  createFieldLight(-440, 120, -240)
 
   field.add(goal1, goal2);
   field.add(floor, mesh);
@@ -462,12 +445,10 @@ function createLake(){
           object.traverse(function (child) {
 
                   if (child instanceof THREE.Mesh) {
-                      child.material.map = texture;
-                  child.castShadow = true;
+                    child.material.map = texture;
+                    child.castShadow = true;
                   }
-
               });
-
           lake.add( object);
         }
       );
@@ -511,24 +492,19 @@ function createLake(){
   function createDuck(){
     const duck = new THREE.Group();
 
-    const geometrybody = new THREE.BoxBufferGeometry( 24, 12, 14 );
-    const materialbody = new THREE.MeshStandardMaterial( {color: 0xf8fc03} );
-    const body = new THREE.Mesh( geometrybody, materialbody );
+    const bodycolor = new THREE.MeshStandardMaterial( {color: 0xf8fc03} );
+ 
+    const body = new THREE.Mesh( new THREE.BoxBufferGeometry( 24, 12, 14 ), bodycolor );
     body.position.set( 0, 26, 200 );
     body.castShadow = true; body.receiveShadow = true;
 
-    const geometrywings = new THREE.BoxBufferGeometry( 10, 6, 18 );
-    const materialwings = new THREE.MeshStandardMaterial( {color: 0xf8fc03} );
-    const wings = new THREE.Mesh( geometrywings, materialwings );
+    const wings = new THREE.Mesh( new THREE.BoxBufferGeometry( 10, 6, 18 ), bodycolor );
     wings.position.set( 4, 28, 200 );
     wings.castShadow = true; wings.receiveShadow = true;
 
-    const geometryhead = new THREE.BoxBufferGeometry( 10, 8, 8 );
-    const materialhead = new THREE.MeshStandardMaterial( {color: 0xf8fc03} );
-    const head = new THREE.Mesh( geometryhead, materialhead );
+    const head = new THREE.Mesh( new THREE.BoxBufferGeometry( 10, 8, 8 ), bodycolor );
     head.position.set( -6, 36, 200 );
     head.castShadow = true; head.receiveShadow = true;
-
 
     const geometrybeak = new THREE.BoxBufferGeometry( 6, 2, 4 );
     const materialbeak = new THREE.MeshStandardMaterial( {color: 0xfc5a03} );
@@ -536,14 +512,13 @@ function createLake(){
     beak.position.set( -14, 34, 200 );
     beak.castShadow = true; beak.receiveShadow = true;
 
-    const geometryleye = new THREE.SphereGeometry( 2.1, 32, 32 );
-    const materialleye = new THREE.MeshBasicMaterial( { color: 0x000000} );
-    const leye = new THREE.Mesh( geometryleye, materialleye );
+    const eye = new THREE.SphereGeometry( 2.1, 32, 32 )
+    const eyecolor = new THREE.MeshBasicMaterial( { color: 0x000000});
+
+    const leye = new THREE.Mesh(eye, eyecolor);
     leye.position.set( -8, 36.5, 197 );
 
-    const geometryreye = new THREE.SphereGeometry( 2.1, 32, 32 );
-    const materialreye = new THREE.MeshBasicMaterial( { color: 0x000000} );
-    const reye = new THREE.Mesh( geometryreye, materialreye );
+    const reye = new THREE.Mesh( eye, eyecolor);
     reye.position.set( -8, 36.5, 203 );
     
     duck.add(body, wings, head, beak, leye, reye)
