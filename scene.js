@@ -19,7 +19,7 @@ requestAnimationFrame(computeFrame);
 window.addEventListener('resize', resizeWindow);
 
 //To keep track of the keyboard - WASD
-var keyD = false, keyA = false, keyS = false, keyW = false, keyShift= false, keyCtrl= false;
+var keyD = false, keyA = false, keyS = false, keyW = false, keyShift= false;
 document.addEventListener('keydown', onDocumentKeyDown, false);
 document.addEventListener('keyup', onDocumentKeyUp, false);
 
@@ -51,9 +51,6 @@ function onDocumentKeyDown(event) {
         case 16: //shift
             keyShift = true;
             break;
-        // case 17: //ctrl
-        //     keyCtrl = true;
-        //     break;
     }
 }
 function onDocumentKeyUp(event) {
@@ -73,9 +70,6 @@ function onDocumentKeyUp(event) {
         case 16: //shift
             keyShift = false;
             break;
-        // case 17: //ctrl
-        //     keyCtrl = false;
-        //     break;
     }
 }
 
@@ -238,10 +232,6 @@ function computeFrame() {
         fl1.intensity = 1.6;
         fl2.intensity = 1.6;
     }
-    
-
-    if (keyCtrl){ bulblight1.intensity = 2.2; bulblight2.intensity = 2.2; 
-    } else {  bulblight1.intensity = 0; bulblight2.intensity = 0; }
 
     // rotate sun and moon light
     const lightSun = sceneElements.sceneGraph.getObjectByName("sunPivot");
