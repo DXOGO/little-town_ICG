@@ -240,13 +240,13 @@ function computeFrame() {
     
     if (car.position.x < 570 && car.position.x > -970 && car.position.z < 970  && car.position.z > -970){
 
-        if (keyShift){ disp=10; } else { disp=5; }
+        if (keyShift){ disp=16; } else { disp=8; }
 
         if (keyW) { 
             car.translateX(disp*1.5);
         }
         if (keyA) {
-            car.rotation.y += 0.08;
+            car.rotation.y += 0.1;
             car.translateZ(-disp);
             car.translateX(disp);
         }
@@ -254,7 +254,7 @@ function computeFrame() {
             car.translateX(-disp*1.5);
         }
         if (keyD) {
-            car.rotation.y -= 0.08;
+            car.rotation.y -= 0.1;
             car.translateZ(disp);
             car.translateX(disp);
         }

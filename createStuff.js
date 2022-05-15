@@ -64,24 +64,24 @@ function createPlane(l,w){
     let bulb1 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshBasicMaterial({ color: 0xffffff}) );
     bulb1.position.set(30, 15, -9.5);
   
-    let light1 = new THREE.SpotLight(0xffffff, 3.2, 400, THREE.Math.degToRad(30), 0.4);
+    let light1 = new THREE.SpotLight(0xffffff, 2.2, 400, THREE.Math.degToRad(30), 0.4);
     light1.position.set(30, 15, -9.5);
     light1.name = "light1";
     
     let lightTarget1 = new THREE.Object3D();
-    lightTarget1.position.set(30, 15, -9.5);
+    lightTarget1.position.set(30.01, 15, -9.5);
     light1.target = lightTarget1;
     light1.castShadow = true;
 
     let bulb2 = new THREE.Mesh(new THREE.BoxBufferGeometry(4,4,4), new THREE.MeshBasicMaterial({ color: 0xffffff}) );
     bulb2.position.set(30, 15, 9.5);
   
-    let light2 = new THREE.SpotLight(0xffffff, 3.2, 400, THREE.Math.degToRad(30), 0.4);
+    let light2 = new THREE.SpotLight(0xffffff, 2.2, 400, THREE.Math.degToRad(30), 0.4);
     light2.position.set(30, 15, 9.5);
     light2.name = "light2";
   
     let lightTarget2 = new THREE.Object3D();
-    lightTarget2.position.set(30, 15, 9.5);
+    lightTarget2.position.set(30.01, 15, 9.5);
     light2.target = lightTarget2;
     light2.castShadow = true;
   
